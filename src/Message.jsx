@@ -2,14 +2,22 @@ import React, {Component} from 'react';
 
 class Message extends Component {
   render() {
-    return (
-    <div>
-      <span className="message-username">Anonymous1</span>
-      <span className="message-content">I won't be impressed with technology until I can download food.</span>
-    </div>
-
-    );
+    if (this.props.chatMessage.type === "newMessage") {
+      return (
+        <div>
+          <span className="message-username">{this.props.chatMessage.username}</span>
+          <span className="message-content">{this.props.chatMessage.content}</span>
+        </div>
+      );
+    } else {
+      return (
+        <div className="message system">
+          {this.props.chatMessage.content}
+        </div>
+      );
+    }
   }
 }
 
 export default Message;
+

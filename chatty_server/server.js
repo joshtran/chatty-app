@@ -21,12 +21,19 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   //Set up callback for when message is received from client at the other end of this pipeline
   ws.on('message', (data) => {
-
-    let messageId = "";
-    //Decode JSON string
     let message = JSON.parse(data);
-    messageId = uuid.v4();
-    let broadcastMessage = JSON.stringify({username: message.username, content: message.content, id: messageId});
+    let broadcastMessage = "";
+    let messageId = "";
+
+    if (message.type === "newMessage") {
+      messageId = uuid.v4();
+      broadcastMessage = JSON.stringify({username: message.username, content: message.content, id: messageId, type: message.type});
+    }
+
+    if (message.type === "newName") {
+      messageId = uuid.v4();
+      broadcastMessage = JSON.stringify({newname: message.newname, oldname: message.oldname, content: message.content, id: messageId, type: message.type});
+    }
 
     //Send message to all connected clients
     broadcast(broadcastMessage);

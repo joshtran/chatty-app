@@ -15,17 +15,29 @@ class ChatBar extends Component {
     this.state.messageCounter += 1
   }
 
+  //Post new message from user
   keyHandler(event){
     if (event.key === "Enter") {
-      this.props.postMessage([this.props.currentUser.name, event.target.value]);
+      this.props.postMessage({
+        username: this.props.currentUser.name,
+        content: event.target.value,
+        type: "newMessage"
+      });
       event.target.value = "";
     }
   }
 
+  //Change user name and post notification
   newUser(event){
     if (event.key === "Enter") {
-      console.log("name change enter");
       this.props.createUser(event.target.value);
+      this.props.postMessage({
+        oldname: this.props.currentUser.name,
+        newname: event.target.value,
+        content: this.props.currentUser.name+" changed their name to "+event.target.value,
+        type: "newName"
+      });
+
     }
   }
 

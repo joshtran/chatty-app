@@ -17,38 +17,67 @@ class App extends Component {
   }
 
 
-
+  //Receive messages from the server and display
   componentDidMount() {
     this.socket.onopen = (event) => {
-    console.log("Connected to the websocket server");
+      console.log("Connected to the websocket server");
     }
 
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
 
-      this.setState({
-        messages:this.state.messages.concat({
-          username: message.username,
-          content: message.content,
-          id: message.id
+      if (message.type === "newMessage") {
+        this.setState({
+          messages:this.state.messages.concat({
+            username: message.username,
+            content: message.content,
+            id: message.id,
+            type: message.type
+          })
         })
-      })
+      }
+
+      if (message.type === "newName") {
+        this.setState({
+          messages:this.state.messages.concat({
+            newname: message.newname,
+            oldname: message.oldname,
+            content: message.content,
+            id: message.id,
+            type: message.type
+          })
+        })
+      }
+
     }
   }
 
+  //Receive mssages from ChatBar and send them to the server
+  postMessage(object){
 
-  postMessage(array){
-    this.socket.send(
-      JSON.stringify({username: array[0], content: array[1]})
-    );
+    if (object.type === "newMessage") {
+      this.socket.send(
+        JSON.stringify({username: object.username, content: object.content, type: object.type})
+      );
+    }
+
+    if (object.type === "newName") {
+      this.socket.send(
+        JSON.stringify({newname: object.newname, oldname: object.oldname, content: object.content, type: object.type})
+      );
+    }
+
+
   }
 
+  //Change user name
   createUser(newName){
     "app receive name change enter"
     this.setState({
       currentUser: {name: newName}
     })
   }
+
 
   render() {
     return (
