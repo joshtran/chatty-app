@@ -12,11 +12,9 @@ class MessageList extends Component {
           </div>
         )}
       </div>
-
     );
   }
 }
-
 
 
 export default MessageList;
