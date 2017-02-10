@@ -9,7 +9,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Bob"},
-      messages: []
+      messages: [],
+      numUsers: 0
     };
     this.createUser = this.createUser.bind(this)
     this.postMessage = this.postMessage.bind(this)
@@ -49,6 +50,14 @@ class App extends Component {
         })
       }
 
+
+      if (message.type === "numUsers") {
+        this.setState({
+          numUsers: message.usercount
+        })
+        // console.log("this is number of users", message.usercount)
+      }
+
     }
   }
 
@@ -84,6 +93,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <span className="user-count">{this.state.numUsers} users online</span>
         </nav>
         <main className="messages">
           <MessageList messages={this.state.messages}/>
